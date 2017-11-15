@@ -9,9 +9,13 @@ export as namespace h337;
 /*
  * Create a heatmap instance. A Heatmap can be customized with the configObject.
  */
-export function create<X extends string, Y extends string, V extends string>(
-    configObject: HeatmapConfiguration<X, Y, V>
-): Heatmap<X, Y, V>;
+export function create<
+    V extends string = 'value',
+    X extends string = 'x',
+    Y extends string = 'y'
+>(
+    configObject: HeatmapConfiguration<V, X, Y>
+): Heatmap<V, X, Y>;
 
 export function register(pluginKey: string, plugin: any): void;
 
@@ -21,38 +25,38 @@ export function register(pluginKey: string, plugin: any): void;
  * the heatmap gets updated (either partially or completely, depending on
  * whether it's necessary).
  */
-export class Heatmap<X extends string, Y extends string, V extends string> {
+export class Heatmap<V extends string, X extends string, Y extends string> {
     /*
      * Use this functionality only for adding datapoints on the fly, not for data
      * initialization! heatmapInstance.addData adds a single or multiple
      * datapoints to the heatmap's datastore.
      */
-    addData(dataPoint: DataPoint<X, Y, V> | ReadonlyArray<DataPoint<X, Y, V>>): void;
+    addData(dataPoint: DataPoint<V, X, Y> | ReadonlyArray<DataPoint<V, X, Y>>): void;
 
     /*
      * Initialize a heatmap instance with the given dataset. Removes all
      * previously existing points from the heatmap instance and re-initializes
      * the datastore.
      */
-    setData(data: HeatmapData<X, Y, V>): Heatmap<X, Y, V>;
+    setData(data: HeatmapData<V, X, Y>): Heatmap<V, X, Y>;
 
     /*
      * Changes the upper bound of your dataset and triggers a complete
      * rerendering.
      */
-    setDataMax(number: number): Heatmap<X, Y, V>;
+    setDataMax(number: number): Heatmap<V, X, Y>;
 
     /*
      * Changes the lower bound of your dataset and triggers a complete
      * rerendering.
      */
-    setDataMin(number: number): Heatmap<X, Y, V>;
+    setDataMin(number: number): Heatmap<V, X, Y>;
 
     /*
      * Reconfigures a heatmap instance after it has been initialized. Triggers a
      * complete rerendering.
      */
-    configure(configObject: HeatmapConfiguration<X, Y, V>): Heatmap<X, Y, V>;
+    configure(configObject: HeatmapConfiguration<V, X, Y>): Heatmap<V, X, Y>;
 
     /*
      * Returns value at datapoint position.
@@ -65,7 +69,7 @@ export class Heatmap<X extends string, Y extends string, V extends string> {
     /*
      * Returns a persistable and reimportable (with setData) JSON object.
      */
-    getData(): HeatmapData<X, Y, V>;
+    getData(): HeatmapData<V, X, Y>;
 
     /*
      * Returns dataURL string.
@@ -77,7 +81,7 @@ export class Heatmap<X extends string, Y extends string, V extends string> {
     /*
      * Repaints the whole heatmap canvas.
      */
-    repaint(): Heatmap<X, Y, V>;
+    repaint(): Heatmap<V, X, Y>;
 }
 
 export interface BaseHeatmapConfiguration<V extends string = 'value'> {
@@ -215,7 +219,7 @@ export interface HeatmapData<X extends string, Y extends string, V extends strin
     /*
      * An array of data points
      */
-    data: ReadonlyArray<DataPoint<X, Y, V>>;
+    data: ReadonlyArray<DataPoint<V, X, Y>>;
 
     /*
      * Max value of the valueField

@@ -24,11 +24,11 @@ const container = {} as HTMLElement;
 {
     const config: h337.HeatmapConfiguration = {
         container,
-        labelKey: 'bar' // $ExpectError
+        labelField: 'foo', // $ExpectError
     };
 }
 
-// Heatmap
+// h337.create
 {
     // $ExpectType Heatmap<"value", "x", "y">
     h337.create({ container });
