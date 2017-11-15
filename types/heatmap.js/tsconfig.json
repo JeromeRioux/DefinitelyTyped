@@ -16,7 +16,7 @@
         "types": [],
         "paths": {
             "leaflet": [
-                "leaflet/v0"
+                "leaflet"
             ]
         },
         "noEmit": true,

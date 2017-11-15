@@ -228,7 +228,7 @@ export interface HeatmapData<X extends string, Y extends string, V extends strin
     min?: number;
 }
 
-import * as Leaflet from "leaflet";
+import { Layer } from "leaflet";
 
 declare global {
     /*
@@ -238,7 +238,7 @@ declare global {
         V extends string,
         TLat extends string,
         TLng extends string
-    > extends Leaflet.Layer {
+    > extends Layer {
         /*
          * Initialization function
          */
