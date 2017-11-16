@@ -1,7 +1,8 @@
 // tslint:disable-next-line no-object-literal-type-assertion
 const container = {} as HTMLElement;
 
-// HeatmapConfiguration
+// -- h337.HeatmapConfiguration --
+
 {
     const config: h337.HeatmapConfiguration = { container };
     config; // $ExpectType HeatmapConfiguration<"value", "x", "y">
@@ -12,7 +13,7 @@ const container = {} as HTMLElement;
     const config: h337.HeatmapConfiguration = {};
 }
 
-{ // Permits default field names
+{
     const config: h337.HeatmapConfiguration = {
         container,
         xField: 'x',
@@ -37,13 +38,26 @@ const container = {} as HTMLElement;
     config; // $ExpectType HeatmapConfiguration<"foo", "x", "y">
 }
 
-// h337.create
+// -- h337.create --
+
 {
     // $ExpectType Heatmap<"value", "x", "y">
     h337.create({ container });
 
     // $ExpectType Heatmap<"count", "xPos", "yPos">
-    h337.create<"count", "xPos", "yPos">({ container });
+    h337.create<"count", "xPos", "yPos">({
+        container,
+        xField: "xPos",
+        yField: "yPos",
+    });
+
+    const config: h337.HeatmapConfiguration<"count", "xPos", "yPos"> = {
+        container,
+        xField: "xPos",
+        yField: "yPos",
+    };
+    // $ExpectType Heatmap<"count", "xPos", "yPos">
+    h337.create(config);
 }
 
 {
@@ -79,8 +93,12 @@ const container = {} as HTMLElement;
         lngField: 'lng',
         valueField: 'count'
     };
+    // $ExpectType HeatmapOverlayConfiguration<"count", "lat", "lng">
+    config;
 
     const heatmapLayer = new HeatmapOverlay(config);
+    // $ExpectType HeatmapOverlay<"count", "lat", "lng">
+    heatmapLayer;
 
     const map = new L.Map('map-canvas', {
         center: new L.LatLng(25.6586, -80.3568),
@@ -88,5 +106,6 @@ const container = {} as HTMLElement;
         layers: [baseLayer, heatmapLayer]
     });
 
+    // $ExpectType void
     heatmapLayer.setData(testData);
 }
