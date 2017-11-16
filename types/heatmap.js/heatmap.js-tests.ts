@@ -12,7 +12,7 @@ const container = {} as HTMLElement;
     const config: h337.HeatmapConfiguration = {};
 }
 
-{
+{ // Permits default field names
     const config: h337.HeatmapConfiguration = {
         container,
         xField: 'x',
@@ -22,10 +22,19 @@ const container = {} as HTMLElement;
 }
 
 {
+    // $ExpectError
     const config: h337.HeatmapConfiguration = {
         container,
-        labelField: 'foo', // $ExpectError
+        valueField: 'foo',
     };
+}
+
+{
+    const config: h337.HeatmapConfiguration<'foo'> = {
+        container,
+        valueField: 'foo',
+    };
+    config; // $ExpectType HeatmapConfiguration<"foo", "x", "y">
 }
 
 // h337.create
