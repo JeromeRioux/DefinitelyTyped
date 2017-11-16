@@ -60,6 +60,8 @@ const container = {} as HTMLElement;
     h337.create(config);
 }
 
+// -- Leaflet plugin --
+
 {
     const baseLayer = L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
