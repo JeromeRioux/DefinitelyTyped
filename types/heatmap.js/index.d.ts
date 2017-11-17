@@ -2,7 +2,7 @@
 // Project: https://github.com/pa7/heatmap.js/
 // Definitions by: Yang Guan <https://github.com/lookuptable>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.3
+// TypeScript Version: 2.4
 
 export as namespace h337;
 
@@ -31,45 +31,58 @@ export class Heatmap<V extends string, X extends string, Y extends string> {
      * initialization! heatmapInstance.addData adds a single or multiple
      * datapoints to the heatmap's datastore.
      */
-    addData(dataPoint: DataPoint<V, X, Y> | ReadonlyArray<DataPoint<V, X, Y>>): void;
+    addData(dataPoint: DataPoint<V, X, Y> | ReadonlyArray<DataPoint<V, X, Y>>): this;
 
     /*
      * Initialize a heatmap instance with the given dataset. Removes all
      * previously existing points from the heatmap instance and re-initializes
      * the datastore.
      */
-    setData(data: HeatmapData<V, X, Y>): Heatmap<V, X, Y>;
+    setData(data: Readonly<HeatmapData<V, X, Y>>): this;
 
     /*
      * Changes the upper bound of your dataset and triggers a complete
      * rerendering.
      */
-    setDataMax(number: number): Heatmap<V, X, Y>;
+    setDataMax(number: number): this;
 
     /*
      * Changes the lower bound of your dataset and triggers a complete
      * rerendering.
      */
-    setDataMin(number: number): Heatmap<V, X, Y>;
+    setDataMin(number: number): this;
 
     /*
      * Reconfigures a heatmap instance after it has been initialized. Triggers a
      * complete rerendering.
+     *
+     * NOTE: This returns a reference to itself, but also offers an opportunity
+     * to change the `xField`, `yField` and `valueField` options, which can
+     * change the type of the `Heatmap` instance.
      */
-    configure(configObject: HeatmapConfiguration<V, X, Y>): Heatmap<V, X, Y>;
+    configure<
+        Vn extends string = V,
+        Xn extends string = X,
+        Yn extends string = Y
+    >(configObject: HeatmapConfiguration<Vn, Xn, Yn>): Heatmap<Vn, Xn, Yn>;
 
-    /*
+    /**
      * Returns value at datapoint position.
      *
      * The returned value is an interpolated value based on the gradient blending
      * if point is not in store.
+     *
+     * NOTE: This function uses `x` and `y` instead of custom `xField` and
+     * `yField`
      */
-    getValueAt(point: Point<X, Y>): number;
+    getValueAt(point: Point<'x', 'y'>): number;
 
     /*
      * Returns a persistable and reimportable (with setData) JSON object.
+     *
+     * TODO: Add `radius` which is also returned
      */
-    getData(): HeatmapData<V, X, Y>;
+    getData(): HeatmapData<'value', 'x', 'y'>;
 
     /*
      * Returns dataURL string.
@@ -81,7 +94,7 @@ export class Heatmap<V extends string, X extends string, Y extends string> {
     /*
      * Repaints the whole heatmap canvas.
      */
-    repaint(): Heatmap<V, X, Y>;
+    repaint(): this;
 }
 
 export interface BaseHeatmapConfiguration<V extends string = 'value'> {
@@ -203,7 +216,11 @@ export interface HeatmapOverlayConfiguration<
  * overridden by providing alternative values for `xKey` and `yKey` in the
  * config object.
  */
-export type DataPoint<X extends string, Y extends string, V extends string> =
+export type DataPoint<
+    V extends string = 'value',
+    X extends string = 'x',
+    Y extends string = 'y',
+> =
     Record<V, number> & Point<X, Y>;
 
 /*
@@ -215,7 +232,7 @@ export type Point<X extends string, Y extends string> =
 /*
  * An object representing the set of data points on a heatmap
  */
-export interface HeatmapData<X extends string, Y extends string, V extends string> {
+export interface HeatmapData<V extends string, X extends string, Y extends string> {
     /*
      * An array of data points
      */
@@ -224,12 +241,12 @@ export interface HeatmapData<X extends string, Y extends string, V extends strin
     /*
      * Max value of the valueField
      */
-    max?: number;
+    max: number;
 
     /*
      * Min value of the valueField
      */
-    min?: number;
+    min: number;
 }
 
 import { Layer } from "leaflet";
