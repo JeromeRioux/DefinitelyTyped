@@ -208,10 +208,10 @@ const container = {} as HTMLElement;
 // -- Heatmap#getData --
 
 {
-    // $ExpectType HeatmapData<"value", "x", "y">
+    // $ExpectType HeatmapData<DataCircle>
     h337.create({ container }).getData();
 
-    // $ExpectType HeatmapData<"value", "x", "y">
+    // $ExpectType HeatmapData<DataCircle>
     h337.create<"foo", "bar", "baz">({ container }).getData();
 }
 
@@ -242,7 +242,7 @@ const container = {} as HTMLElement;
         }
     );
 
-    const testData: h337.HeatmapData<'count', 'lat', 'lng'> = {
+    const testData: h337.HeatmapData<h337.DataPoint<'count', 'lat', 'lng'>> = {
         min: 1,
         max: 3,
         data: [

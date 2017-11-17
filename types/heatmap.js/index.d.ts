@@ -38,7 +38,7 @@ export class Heatmap<V extends string, X extends string, Y extends string> {
      * previously existing points from the heatmap instance and re-initializes
      * the datastore.
      */
-    setData(data: Readonly<HeatmapData<V, X, Y>>): this;
+    setData(data: HeatmapData<DataPoint<V, X, Y>>): this;
 
     /*
      * Changes the upper bound of your dataset and triggers a complete
@@ -79,10 +79,8 @@ export class Heatmap<V extends string, X extends string, Y extends string> {
 
     /*
      * Returns a persistable and reimportable (with setData) JSON object.
-     *
-     * TODO: Add `radius` which is also returned
      */
-    getData(): HeatmapData<'value', 'x', 'y'>;
+    getData(): HeatmapData<DataCircle>;
 
     /*
      * Returns dataURL string.
@@ -212,6 +210,12 @@ export interface HeatmapOverlayConfiguration<
 }
 
 /*
+ * A position in the heatmap.
+ */
+export type Point<X extends string, Y extends string> =
+    Record<X | Y, number>;
+
+/*
  * A single data point on a heatmap. The interface of the data point can be
  * overridden by providing alternative values for `xKey` and `yKey` in the
  * config object.
@@ -224,19 +228,24 @@ export type DataPoint<
     Record<V, number> & Point<X, Y>;
 
 /*
- * A position in the heatmap.
+ * Type of data returned by `Heatmap#getData`, which ignores custom `xField`,
+ * `yField` and `valueField`.
  */
-export type Point<X extends string, Y extends string> =
-    Record<X | Y, number>;
+export interface DataCircle {
+    x: number;
+    y: number;
+    value: number;
+    radius: number;
+}
 
 /*
  * An object representing the set of data points on a heatmap
  */
-export interface HeatmapData<V extends string, X extends string, Y extends string> {
+export interface HeatmapData<T> {
     /*
      * An array of data points
      */
-    data: ReadonlyArray<DataPoint<V, X, Y>>;
+    data: ReadonlyArray<T>;
 
     /*
      * Max value of the valueField
@@ -248,6 +257,9 @@ export interface HeatmapData<V extends string, X extends string, Y extends strin
      */
     min: number;
 }
+
+// V extends string, X extends string, Y extends string
+// DataPoint<V, X, Y>
 
 import { Layer } from "leaflet";
 
@@ -268,7 +280,7 @@ declare global {
         /*
          * Initialize a heatmap instance with the given dataset
          */
-        setData(data: HeatmapData<V, TLat, TLng>): void;
+        setData(data: HeatmapData<DataPoint<V, TLat, TLng>>): void;
 
         /*
          * Experimential... not ready.
